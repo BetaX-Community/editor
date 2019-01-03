@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { compose, withProps } from "recompose";
+import { compose, withProps, withState } from "recompose";
 import {
     withScriptjs,
     withGoogleMap,
-    GoogleMap
+    GoogleMap,
+    Marker
 } from "react-google-maps";
 
 const gmaps_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -23,10 +24,16 @@ const MyMapComponent = compose(
     mapElement: <div style={{ height: `100%` }} />
   }),
   withScriptjs,
-  withGoogleMap
+    withGoogleMap,
+    withState('stops', 'setStops', [])
 )(props => (
+    <div>
 	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
+	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
 	</GoogleMap>
+	
+	<Stop update={props.setStops} />
+	</div>
 ));
 
 class Stop extends React.Component {
@@ -40,18 +47,22 @@ class Stop extends React.Component {
 	    .then(response => response.json().then(data => this.setState({ items: data })))
 	    .catch(error => console.log(error));
     }
+    
+    handleClick = (index) => {
+	console.log('this is:', this.state.items[index]);
+	fetch('http://localhost:2999/stops/' + this.state.items[index])
+	    .then(response => response.json().then(data => this.props.update(() => data)))
+	    .catch(error => console.log(error));
+    }
+    
     render () {
 	return <ul> {
-	    this.state.items.map((item, index) => <li key={index}>{ item }</li>)
+	    this.state.items.map((item, index) => <li key={index} onClick={() => this.handleClick(index)}>{ item }</li>)
 	}
 	</ul>
     }
 }
 
-const App = () =>
-      <div>
-      <MyMapComponent />
-      <Stop />
-      </div>
+const App = () => <MyMapComponent />
 
 ReactDOM.render(<App />, document.getElementById("root"));
