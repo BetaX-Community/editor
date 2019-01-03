@@ -5,7 +5,8 @@ import {
     withScriptjs,
     withGoogleMap,
     GoogleMap,
-    Marker
+    Marker,
+    Polyline
 } from "react-google-maps";
 
 const gmaps_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
@@ -25,14 +26,16 @@ const MyMapComponent = compose(
   }),
   withScriptjs,
     withGoogleMap,
-    withState('stops', 'setStops', [])
+    withState('stops', 'setStops', []),
+     withState('ways', 'setWays', [])
 )(props => (
     <div>
 	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
+    { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
 	</GoogleMap>
 	
-	<Stop update={props.setStops} />
+	<Stop setStops={props.setStops} setWays={props.setWays} />
 	</div>
 ));
 
@@ -51,7 +54,10 @@ class Stop extends React.Component {
     handleClick = (index) => {
 	console.log('this is:', this.state.items[index]);
 	fetch('http://localhost:2999/stops/' + this.state.items[index])
-	    .then(response => response.json().then(data => this.props.update(() => data)))
+	    .then(response => response.json().then(data => this.props.setStops(() => data)))
+	    .catch(error => console.log(error));
+	fetch('http://localhost:2999/ways/' + this.state.items[index])
+	    .then(response => response.json().then(data => this.props.setWays(() => data)))
 	    .catch(error => console.log(error));
     }
     
