@@ -27,22 +27,25 @@ const MyMapComponent = compose(
   withScriptjs,
     withGoogleMap,
     withState('stops', 'setStops', []),
-     withState('ways', 'setWays', [])
+    withState('ways', 'setWays', []),
+    withState('busLineNameFilter', 'setBusLineNameFilter', '')
 )(props => (
     <div>
 	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
 	</GoogleMap>
-	
-	<Stop setStops={props.setStops} setWays={props.setWays} />
+	<FilterForm setBusLineNameFilter={props.setBusLineNameFilter} />
+	<Stop busLineNameFilter={props.busLineNameFilter} setStops={props.setStops} setWays={props.setWays} />
 	</div>
 ));
 
 class Stop extends React.Component {
     constructor() {
 	super()
-	this.state = {items: []}
+	this.state = {
+	    items: []
+	}
     }
     componentDidMount () {
 	
@@ -53,20 +56,40 @@ class Stop extends React.Component {
     
     handleClick = (index) => {
 	console.log('this is:', this.state.items[index]);
-	fetch('http://localhost:2999/stops/' + this.state.items[index])
+	fetch('http://localhost:2999/stops/' + this.state.items.filter((busLineName) => {
+		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
+	    })[index])
 	    .then(response => response.json().then(data => this.props.setStops(() => data)))
 	    .catch(error => console.log(error));
-	fetch('http://localhost:2999/ways/' + this.state.items[index])
+	fetch('http://localhost:2999/ways/' + this.state.items.filter((busLineName) => {
+		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
+	    })[index])
 	    .then(response => response.json().then(data => this.props.setWays(() => data)))
 	    .catch(error => console.log(error));
     }
     
     render () {
 	return <ul> {
-	    this.state.items.map((item, index) => <li key={index} onClick={() => this.handleClick(index)}>{ item }</li>)
+	    this.state.items.filter((busLineName) => {
+		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
+	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(index)}>{ item }</li>)
 	}
 	</ul>
     }
+}
+
+class FilterForm extends React.Component {
+  handleChange = (e) => {
+      this.props.setBusLineNameFilter(e.target.value)
+  }
+  
+  render() {
+      return <div>
+          <label htmlFor="filter">Filter by Bus Line Name: </label>
+          <input type="text" id="filter"
+      onChange={this.handleChange}/>
+	  </div>
+  }
 }
 
 const App = () => <MyMapComponent />
