@@ -28,15 +28,17 @@ const MyMapComponent = compose(
     withGoogleMap,
     withState('stops', 'setStops', []),
     withState('ways', 'setWays', []),
-    withState('busLineNameFilter', 'setBusLineNameFilter', '')
+    withState('busLineNameFilter', 'setBusLineNameFilter', ''),
+    withState('selectedBusLineName', 'setSelectedBusLineName', '')
 )(props => (
-    <div>
+	<div>
+	<h1>{props.selectedBusLineName}</h1>
 	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
 	</GoogleMap>
 	<FilterForm setBusLineNameFilter={props.setBusLineNameFilter} />
-	<Stop busLineNameFilter={props.busLineNameFilter} setStops={props.setStops} setWays={props.setWays} />
+	<Stop busLineNameFilter={props.busLineNameFilter} setSelectedBusLineName={props.setSelectedBusLineName} setStops={props.setStops} setWays={props.setWays} />
 	</div>
 ));
 
@@ -55,7 +57,9 @@ class Stop extends React.Component {
     }
     
     handleClick = (index) => {
-	console.log('this is:', this.state.items[index]);
+	this.props.setSelectedBusLineName(this.state.items.filter((busLineName) => {
+	    return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
+	})[index]);
 	fetch('http://localhost:2999/stops/' + this.state.items.filter((busLineName) => {
 		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
 	    })[index])
