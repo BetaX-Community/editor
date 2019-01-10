@@ -27,22 +27,35 @@ const MyMapComponent = compose(
   withScriptjs,
     withGoogleMap,
     withState('stops', 'setStops', []),
+    withState('stop', 'setBusStops', null),
     withState('ways', 'setWays', []),
     withState('busLineNameFilter', 'setBusLineNameFilter', ''),
-    withState('selectedBusLineName', 'setSelectedBusLineName', '')
+    withState('busStopNameFilter', 'setBusStopNameFilter', ''),
+    withState('selectedBusLineName', 'setSelectedBusLineName', ''),
+    withState('selectedBusStopName', 'setSelectedBusStopName', '')
 )(props => (
 	<div>
-	<h1>{props.selectedBusLineName}</h1>
 	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
+    { !!props.stop && <Marker position={{lat: parseFloat(props.stop.lat), lng: parseFloat(props.stop.lng)}} title={props.stop.name} /> }
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
-	</GoogleMap>
-	<FilterForm setBusLineNameFilter={props.setBusLineNameFilter} />
-	<Stop busLineNameFilter={props.busLineNameFilter} setSelectedBusLineName={props.setSelectedBusLineName} setStops={props.setStops} setWays={props.setWays} />
+    </GoogleMap>
+	<div className="grid-container">
+	<div>
+	<h1>{props.selectedBusLineName}</h1>
+	<LinesFilterForm setBusLineNameFilter={props.setBusLineNameFilter} />
+	<Lines busLineNameFilter={props.busLineNameFilter} setSelectedBusLineName={props.setSelectedBusLineName} setStops={props.setStops} setWays={props.setWays} />
+	</div>
+	<div>
+	<h1>{props.selectedBusStopName}</h1>
+	<StopsFilterForm setBusStopNameFilter={props.setBusStopNameFilter} />
+	<Stops busStopNameFilter={props.busStopNameFilter} setSelectedBusStopName={props.setSelectedBusStopName} setBusStops={props.setBusStops} />
+	</div>
+	</div>
 	</div>
 ));
 
-class Stop extends React.Component {
+class Lines extends React.Component {
     constructor() {
 	super()
 	this.state = {
@@ -82,18 +95,72 @@ class Stop extends React.Component {
     }
 }
 
-class FilterForm extends React.Component {
-  handleChange = (e) => {
-      this.props.setBusLineNameFilter(e.target.value)
-  }
-  
-  render() {
-      return <div>
-          <label htmlFor="filter">Filter by Bus Line Name: </label>
-          <input type="text" id="filter"
-      onChange={this.handleChange}/>
-	  </div>
-  }
+class Stops extends React.Component {
+    constructor() {
+	super()
+	this.state = {
+	    items: []
+	}
+    }
+
+    componentDidMount () {
+	
+	fetch('http://localhost:2999/busStops')
+	    .then(response => response.json().then(data => this.setState({ items: data })))
+	    .catch(error => console.log(error));
+    }
+
+    handleClick = (index) => {
+	this.props.setSelectedBusStopName(this.state.items.filter((busStop) => {
+	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
+	})[index].name);
+	this.props.setBusStops(this.state.items.filter((busStop) => {
+	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
+	})[index]);
+	console.log(this.state.items.filter((busStop) => {
+	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
+	})[index]);
+    }
+    
+
+    render () {
+	return <ul> {
+	    this.state.items.filter((busStop) => {
+		return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
+	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(index)}>{ item.name }</li>)
+	}
+	</ul>
+    }
+}
+
+class LinesFilterForm extends React.Component {
+    
+    handleChange = (e) => {
+	this.props.setBusLineNameFilter(e.target.value)
+    }
+    
+    render() {
+	return <div>
+            <label htmlFor="filterBusLineName">Filter by Bus Line Name: </label>
+            <input type="text" id="filterBusLineName"
+	onChange={this.handleChange}/>
+	    </div>
+    }
+}
+
+class StopsFilterForm extends React.Component {
+    
+    handleChange = (e) => {
+	this.props.setBusStopNameFilter(e.target.value)
+    }
+    
+    render() {
+	return <div>
+            <label htmlFor="filterBusStopName">Filter by Bus Stop Name: </label>
+            <input type="text" id="filterBusStopName"
+	onChange={this.handleChange}/>
+	    </div>
+    }
 }
 
 const App = () => <MyMapComponent />
