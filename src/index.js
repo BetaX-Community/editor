@@ -27,7 +27,7 @@ const MyMapComponent = compose(
   withScriptjs,
     withGoogleMap,
     withState('stops', 'setStops', []),
-    withState('stop', 'setBusStops', null),
+    withState('stop', 'setBusStops', []),
     withState('ways', 'setWays', []),
     withState('busLineNameFilter', 'setBusLineNameFilter', ''),
     withState('busStopNameFilter', 'setBusStopNameFilter', ''),
@@ -37,7 +37,7 @@ const MyMapComponent = compose(
 	<div>
 	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
-    { !!props.stop && <Marker position={{lat: parseFloat(props.stop.lat), lng: parseFloat(props.stop.lng)}} title={props.stop.name} /> }
+    { props.stop.map((item, index) => <Marker key={index} position={{lat: parseFloat(item.lat), lng: parseFloat(item.lng)}} title={item.name} />) }
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
     </GoogleMap>
 	<div className="grid-container">
@@ -114,9 +114,9 @@ class Stops extends React.Component {
 	this.props.setSelectedBusStopName(this.state.items.filter((busStop) => {
 	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
 	})[index].name);
-	this.props.setBusStops(this.state.items.filter((busStop) => {
+	this.props.setBusStops((busStops) => busStops.concat([this.state.items.filter((busStop) => {
 	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	})[index]);
+	})[index]]));
 	console.log(this.state.items.filter((busStop) => {
 	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
 	})[index]);
