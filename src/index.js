@@ -37,7 +37,7 @@ const MyMapComponent = compose(
 	<div>
 	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
-    { props.stop.map((item, index) => <Marker key={index} position={{lat: parseFloat(item.lat), lng: parseFloat(item.lng)}} title={item.name} />) }
+    { props.stop.filter(item => item.display).map((item, index) => <Marker key={index} position={{lat: parseFloat(item.lat), lng: parseFloat(item.lng)}} title={item.name} />) }
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
     </GoogleMap>
 	<div className="grid-container">
@@ -104,19 +104,29 @@ class Stops extends React.Component {
     }
 
     componentDidMount () {
-	
+	let idx = 0;
 	fetch('http://localhost:2999/busStops')
 	    .then(response => response.json().then(data => this.setState({ items: data })))
+	    .then(() => this.state.items.map(item => {
+		item.display = false;
+		item.id = idx++;
+		return item;
+	    }))
+	    .then(() => this.props.setBusStops(this.state.items))
 	    .catch(error => console.log(error));
     }
 
     handleClick = (index) => {
-	this.props.setSelectedBusStopName(this.state.items.filter((busStop) => {
-	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	})[index].name);
-	this.props.setBusStops((busStops) => busStops.concat([this.state.items.filter((busStop) => {
-	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	})[index]]));
+	this.props.setSelectedBusStopName(this.state.items[index].name);
+	this.props.setBusStops((busStops) => {
+	    let prevState = this.state.items[index].display;
+	    return busStops.map((busStop, idx) => {
+		if (idx === index)
+		    busStop.display = !prevState;
+		return busStop;
+	    });
+
+	});
 	console.log(this.state.items.filter((busStop) => {
 	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
 	})[index]);
@@ -127,7 +137,7 @@ class Stops extends React.Component {
 	return <ul> {
 	    this.state.items.filter((busStop) => {
 		return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(index)}>{ item.name }</li>)
+	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name }</li>)
 	}
 	</ul>
     }
