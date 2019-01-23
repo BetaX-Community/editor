@@ -137,7 +137,7 @@ class Stops extends React.Component {
 	return <ul> {
 	    this.state.items.filter((busStop) => {
 		return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name }</li>)
+	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name } <span>{ item.display ? 'd': '' }</span></li>)
 	}
 	</ul>
     }
