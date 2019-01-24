@@ -32,15 +32,23 @@ const MyMapComponent = compose(
     withState('busLineNameFilter', 'setBusLineNameFilter', ''),
     withState('busStopNameFilter', 'setBusStopNameFilter', ''),
     withState('selectedBusLineName', 'setSelectedBusLineName', ''),
-    withState('selectedBusStopName', 'setSelectedBusStopName', '')
+    withState('selectedBusStopName', 'setSelectedBusStopName', ''),
+    withState('clickCoords', 'setClickCoords', {})
 )(props => (
 	<div>
-	<GoogleMap defaultZoom={8} defaultCenter={{ lat: -18.9127, lng: 47.49855 }}>
+	<GoogleMap
+    defaultZoom={8}
+    defaultCenter={{ lat: -18.9127, lng: 47.49855 }}
+    options={{ draggableCursor: 'crosshair' }}
+    onClick={(e) => props.setClickCoords(e.latLng)}
+	>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
     { props.stop.filter(item => item.display).map((item, index) => <Marker key={index} position={{lat: parseFloat(item.lat), lng: parseFloat(item.lng)}} title={item.name} />) }
+    { !!props.clickCoords.lat && !!props.clickCoords.lng && <Marker position={{ lat: props.clickCoords.lat(), lng: props.clickCoords.lng() }} /> }
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
     </GoogleMap>
 	<div className="grid-container">
+	<div>{!!props.clickCoords.lat && props.clickCoords.lat()}, {!!props.clickCoords.lng && props.clickCoords.lng()}</div><div></div>
 	<div>
 	<h1>{props.selectedBusLineName}</h1>
 	<LinesFilterForm setBusLineNameFilter={props.setBusLineNameFilter} />
