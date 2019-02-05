@@ -44,7 +44,9 @@ const MyMapComponent = compose(
 	>
 	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
     { props.stop.filter(item => item.display).map((item, index) => <Marker key={index} position={{lat: parseFloat(item.lat), lng: parseFloat(item.lng)}} title={item.name} />) }
-    { !!props.clickCoords.lat && !!props.clickCoords.lng && <Marker position={{ lat: props.clickCoords.lat(), lng: props.clickCoords.lng() }} /> }
+    { !!props.clickCoords.lat && !!props.clickCoords.lng && <Marker position={{ lat: props.clickCoords.lat(), lng: props.clickCoords.lng() }}
+      draggable={true}
+      onDrag={(e) => props.setClickCoords(e.latLng)} /> }
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
     </GoogleMap>
 	<div className="grid-container">
