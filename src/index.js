@@ -59,7 +59,7 @@ const MyMapComponent = compose(
 		    return [...stops.slice(0, index), clickedEl,...stops.slice(index + 1)]
 		})
 	    }}>
-			    { item.name } { item.location.lat }, { item.location.lng } <span>{ item.display ? 'd': '' }</span></li>)
+			    { item.name } { item.location.lat }, { item.location.lng } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } /></li>)
 	}
     {
 	    props.clickCoords.map((item, index) => <li key={index} onClick={() => props.setClickCoords(clickCoords => [...clickCoords.slice(0, index), ...clickCoords.slice(index + 1)])}>
@@ -165,7 +165,7 @@ class Stops extends React.Component {
 	return <ul> {
 	    this.state.items.filter((busStop) => {
 		return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name } <span>{ item.display ? 'd': '' }</span></li>)
+	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } /></li>)
 	}
 	</ul>
     }
