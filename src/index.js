@@ -42,7 +42,7 @@ const MyMapComponent = compose(
     options={{ draggableCursor: 'crosshair' }}
     onClick={(e) => props.setClickCoords(clickCoords => [...clickCoords, e.latLng])}
 	>
-	{ props.stops.map((item, index) => <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
+	{ props.stops.map((item, index) => item.display && <Marker key={index} position={{lat: item.location.lat, lng: item.location.lng}} title={item.name} />) }
     { props.stop.filter(item => item.display).map((item, index) => <Marker key={index} position={{lat: parseFloat(item.lat), lng: parseFloat(item.lng)}} title={item.name} />) }
     { props.clickCoords.length > 0 && props.clickCoords.map((item, index) => <Marker key={index} position={{ lat: item.lat(), lng: item.lng() }}
 							    draggable={true}
@@ -51,9 +51,21 @@ const MyMapComponent = compose(
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
     </GoogleMap>
 	<div className="grid-container">
-	<div>{props.clickCoords.map((item, index) => <li key={index} onClick={() => props.setClickCoords(clickCoords => [...clickCoords.slice(0, index), ...clickCoords.slice(index + 1)])}>
-				    { item.lat() }, { item.lng() }
-				    </li>)}</div><div></div>
+	<div>{
+	    props.stops.map((item, index) =>  <li key={index} onClick={() => {
+		props.setStops((stops) => {
+		    var clickedEl = stops[index];
+		    clickedEl.display = !clickedEl.display;
+		    return [...stops.slice(0, index), clickedEl,...stops.slice(index + 1)]
+		})
+	    }}>
+			    { item.name } { item.location.lat }, { item.location.lng } <span>{ item.display ? 'd': '' }</span></li>)
+	}
+    {
+	    props.clickCoords.map((item, index) => <li key={index} onClick={() => props.setClickCoords(clickCoords => [...clickCoords.slice(0, index), ...clickCoords.slice(index + 1)])}>
+				  { item.lat() }, { item.lng() }
+				  </li>)
+	}</div><div></div>
 	<div>
 	<h1>{props.selectedBusLineName}</h1>
 	<LinesFilterForm setBusLineNameFilter={props.setBusLineNameFilter} />
@@ -89,7 +101,10 @@ class Lines extends React.Component {
 	fetch('http://localhost:2999/stops/' + this.state.items.filter((busLineName) => {
 		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
 	    })[index])
-	    .then(response => response.json().then(data => this.props.setStops(() => data)))
+	    .then(response => response.json().then(data => this.props.setStops(() => data.map(item => {
+		item.display = true;
+		return item;
+	    }))))
 	    .catch(error => console.log(error));
 	fetch('http://localhost:2999/ways/' + this.state.items.filter((busLineName) => {
 		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
