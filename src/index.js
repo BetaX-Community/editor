@@ -9,6 +9,11 @@ import {
     Polyline
 } from "react-google-maps";
 
+import Lines from './lines';
+import LinesFilterForm from './lines-filter-form';
+import Stops from './stops';
+import StopsFilterForm from './stops-filter-form';
+
 const gmaps_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const MyMapComponent = compose(
@@ -79,127 +84,6 @@ const MyMapComponent = compose(
 	</div>
 	</div>
 ));
-
-class Lines extends React.Component {
-    constructor() {
-	super()
-	this.state = {
-	    items: []
-	}
-    }
-    componentDidMount () {
-	
-	fetch('http://localhost:2999/lines')
-	    .then(response => response.json().then(data => this.setState({ items: data })))
-	    .catch(error => console.log(error));
-    }
-    
-    handleClick = (index) => {
-	this.props.setSelectedBusLineName(this.state.items.filter((busLineName) => {
-	    return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
-	})[index]);
-	fetch('http://localhost:2999/stops/' + this.state.items.filter((busLineName) => {
-		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
-	    })[index])
-	    .then(response => response.json().then(data => this.props.setStops(() => data.map(item => {
-		item.display = true;
-		return item;
-	    }))))
-	    .catch(error => console.log(error));
-	fetch('http://localhost:2999/ways/' + this.state.items.filter((busLineName) => {
-		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
-	    })[index])
-	    .then(response => response.json().then(data => this.props.setWays(() => data)))
-	    .catch(error => console.log(error));
-    }
-    
-    render () {
-	return <ul> {
-	    this.state.items.filter((busLineName) => {
-		return busLineName.indexOf(this.props.busLineNameFilter.toLowerCase()) !== -1
-	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(index)}>{ item }</li>)
-	}
-	</ul>
-    }
-}
-
-class Stops extends React.Component {
-    constructor() {
-	super()
-	this.state = {
-	    items: []
-	}
-    }
-
-    componentDidMount () {
-	let idx = 0;
-	fetch('http://localhost:2999/busStops')
-	    .then(response => response.json().then(data => this.setState({ items: data })))
-	    .then(() => this.state.items.map(item => {
-		item.display = false;
-		item.id = idx++;
-		return item;
-	    }))
-	    .then(() => this.props.setBusStops(this.state.items))
-	    .catch(error => console.log(error));
-    }
-
-    handleClick = (index) => {
-	this.props.setSelectedBusStopName(this.state.items[index].name);
-	this.props.setBusStops((busStops) => {
-	    let prevState = this.state.items[index].display;
-	    return busStops.map((busStop, idx) => {
-		if (idx === index)
-		    busStop.display = !prevState;
-		return busStop;
-	    });
-
-	});
-	console.log(this.state.items.filter((busStop) => {
-	    return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	})[index]);
-    }
-    
-
-    render () {
-	return <ul> {
-	    this.state.items.filter((busStop) => {
-		return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } /></li>)
-	}
-	</ul>
-    }
-}
-
-class LinesFilterForm extends React.Component {
-    
-    handleChange = (e) => {
-	this.props.setBusLineNameFilter(e.target.value)
-    }
-    
-    render() {
-	return <div>
-            <label htmlFor="filterBusLineName">Filter by Bus Line Name: </label>
-            <input type="text" id="filterBusLineName"
-	onChange={this.handleChange}/>
-	    </div>
-    }
-}
-
-class StopsFilterForm extends React.Component {
-    
-    handleChange = (e) => {
-	this.props.setBusStopNameFilter(e.target.value)
-    }
-    
-    render() {
-	return <div>
-            <label htmlFor="filterBusStopName">Filter by Bus Stop Name: </label>
-            <input type="text" id="filterBusStopName"
-	onChange={this.handleChange}/>
-	    </div>
-    }
-}
 
 const App = () => <MyMapComponent />
 
