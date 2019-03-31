@@ -42,7 +42,7 @@ export default class Stops extends React.Component {
 	return <ul> {
 	    this.state.items.filter((busStop) => {
 		return busStop.name.toLowerCase().indexOf(this.props.busStopNameFilter.toLowerCase()) !== -1
-	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } /></li>)
+	    }).map((item, index) => <li key={index} onClick={() => this.handleClick(item.id)}>{ item.name } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } alt={ item.display ? 'checked': 'unchecked' } /></li>)
 	}
 	</ul>
     }

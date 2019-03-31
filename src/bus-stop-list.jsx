@@ -11,7 +11,7 @@ export default class BusStopList extends React.Component {
 		        return [...stops.slice(0, index), clickedEl,...stops.slice(index + 1)]
 	    	    });
 	        }}>
-	        { item.name } { item.location.lat }, { item.location.lng } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } />
+	          { item.name } { item.location.lat }, { item.location.lng } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } alt={ item.display ? 'checked': 'unchecked' } />
 		</li>
 	    )
 	    }
