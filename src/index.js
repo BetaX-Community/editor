@@ -13,6 +13,7 @@ import Lines from './lines';
 import LinesFilterForm from './lines-filter-form';
 import Stops from './stops';
 import StopsFilterForm from './stops-filter-form';
+import BusStopList from './bus-stop-list';
 
 const gmaps_api_key = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
@@ -56,21 +57,8 @@ const MyMapComponent = compose(
     { props.ways.map((item, index) => <Polyline key={index} path={item} />) }
     </GoogleMap>
 	<div className="grid-container">
-	<div>{
-	    props.stops.map((item, index) =>  <li key={index} onClick={() => {
-		props.setStops((stops) => {
-		    var clickedEl = stops[index];
-		    clickedEl.display = !clickedEl.display;
-		    return [...stops.slice(0, index), clickedEl,...stops.slice(index + 1)]
-		})
-	    }}>
-			    { item.name } { item.location.lat }, { item.location.lng } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } /></li>)
-	}
-    {
-	    props.clickCoords.map((item, index) => <li key={index} onClick={() => props.setClickCoords(clickCoords => [...clickCoords.slice(0, index), ...clickCoords.slice(index + 1)])}>
-				  { item.lat() }, { item.lng() }
-				  </li>)
-	}</div><div></div>
+	<div><BusStopList stops={props.stops} clickCoords={props.clickCoords} setStops={props.setStops} />
+	</div><div></div>
 	<div>
 	<h1>{props.selectedBusLineName}</h1>
 	<LinesFilterForm setBusLineNameFilter={props.setBusLineNameFilter} />
