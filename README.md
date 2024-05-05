@@ -1,3 +1,26 @@
+# BetaX mapping data editor
+
+A browser-based tool for enhancing map data for commuting.
+
+You may need to Enable legacy OpenSSL provider to run it
+
+- On Unix-like (Linux, macOS, Git bash, etc.):
+
+```
+export NODE_OPTIONS=--openssl-legacy-provider
+```
+- On Windows command prompt:
+
+```
+set NODE_OPTIONS=--openssl-legacy-provider
+```
+
+- On PowerShell:
+
+```
+$env:NODE_OPTIONS = "--openssl-legacy-provider"
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
