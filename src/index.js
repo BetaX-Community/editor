@@ -67,7 +67,7 @@ const MyMapComponent = compose(
 	<div>
 	<h1>{props.selectedBusStopName}</h1>
 	<StopsFilterForm setBusStopNameFilter={props.setBusStopNameFilter} />
-	<Stops busStopNameFilter={props.busStopNameFilter} setSelectedBusStopName={props.setSelectedBusStopName} setBusStops={props.setBusStops} />
+        <Stops busStopNameFilter={props.busStopNameFilter} setSelectedBusStopName={props.setSelectedBusStopName} setBusStops={props.setBusStops} />
 	</div>
 	</div>
 	</div>

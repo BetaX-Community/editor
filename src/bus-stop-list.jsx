@@ -1,14 +1,18 @@
 import React from 'react';
+//import { DragDropContext } from 'react-beautiful-dnd';
 
 export default class BusStopList extends React.Component {
     render() {
+        var busStops = [...this.props.stops, ...this.props.clickCoords.map(obj => ({ ...obj, location: { lat: obj.lat(), lng: obj.lng() }, name: "", display: true }))];
+        console.log(busStops);
         return <ul>{
-	    this.props.stops.map((item, index) =>
+            
+	    busStops.map((item, index) =>
 	    	<li key={index} onClick={() => {
-	            this.props.setStops((stops) => {
-		        var clickedEl = stops[index];
-		        clickedEl.display = !clickedEl.display;
-		        return [...stops.slice(0, index), clickedEl,...stops.slice(index + 1)]
+	            this.props.setStops(() => {
+		       var clickedEl = busStops[index];
+		       clickedEl.display = !clickedEl.display;
+		       return [...busStops.slice(0, index), clickedEl,...busStops.slice(index + 1)]
 	    	    });
 	        }}>
 	          { item.name } { item.location.lat }, { item.location.lng } <img src={ 'images/' + (item.display ? 'checked': 'unchecked') + '.png' } alt={ item.display ? 'checked': 'unchecked' } />
