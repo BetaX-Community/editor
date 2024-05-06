@@ -26,6 +26,12 @@ $env:NODE_OPTIONS = "--openssl-legacy-provider"
 You need to run the `map-data-server` which is serving the data that
 is consumed by this web app.
 
+You also need to set the environment varialbe `REACT_APP_GOOGLE_MAPS_API_KEY`
+in a `.env` file in the base directory.
+
+The process of creating a new API key is documented here [Generate API
+keys](https://developers.google.com/maps/documentation/javascript/get-api-key#create-api-keys)
+
 ## Screenshot
 
 ![Screenshot](screenshot.png)
