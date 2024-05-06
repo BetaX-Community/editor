@@ -26,6 +26,10 @@ $env:NODE_OPTIONS = "--openssl-legacy-provider"
 You need to run the `map-data-server` which is serving the data that
 is consumed by this web app.
 
+## Screenshot
+
+![Screenshot](screenshot.png)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
