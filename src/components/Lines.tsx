@@ -13,15 +13,15 @@ const Lines = () => {
   };
 
   const onLineSelect = async (name: string) => {
+    const [stopsRes, waysRes] = await Promise.all([
+      fetch(`http://localhost:2999/stops/${name}`),
+      fetch(`http://localhost:2999/ways/${name}`),
+    ]);
+    const [stops, ways] = await Promise.all([stopsRes.json(), waysRes.json()]);
+
+    setStops(stops);
+    setWays(ways);
     setSelectedLine(name);
-
-    const stopsRes = await fetch(`http://localhost:2999/stops/${name}`);
-    const parsedStops = await stopsRes.json();
-    setStops(parsedStops);
-
-    const waysRes = await fetch(`http://localhost:2999/ways/${name}`);
-    const parsedWays = await waysRes.json();
-    setWays(parsedWays);
   };
 
   useEffect(() => {
