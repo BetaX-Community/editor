@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { useMap } from "../contexts/map";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCheck);
 
 const Stops = () => {
   const [filter, setFilter] = useState("");
@@ -18,12 +23,13 @@ const Stops = () => {
     const stopName = event.target.dataset.stopName;
     const lat = event.target.dataset.lat;
     const lng = event.target.dataset.lng;
+    const isDisplayed = busStops.find((item) => item.name === stopName && item.lat == lat && item.lng == lng);
 
-    // Update the state with the selected stop data
-    if (busStops.find((item) => item.name === stopName && item.lat == lat && item.lng == lng)) {
+    // If displayed, remove from the displayed bus stops
+    if (isDisplayed) {
       setBusStops(busStops.filter((item) => item.name !== stopName || item.lat != lat || item.lng != lng));
     }
-    else {
+    else { // else display
       setBusStops([...busStops, {"name": stopName,
                                  "lat": parseFloat(lat),
                                  "lng": parseFloat(lng)}]);
@@ -53,7 +59,9 @@ const Stops = () => {
             <li key={id}
             data-stop-name={item.name}
             data-lat={item.lat} data-lng={item.lng}
-            onClick={handleClick}>{item.name}</li>
+            onClick={handleClick}>{item.name} { busStops.find(it => it.name === item.name &&
+                                                              it.lat == item.lat && it.lng == item.lng) &&
+                                                <FontAwesomeIcon icon="check" /> }</li>
           ))}
       </ul>
     </>
