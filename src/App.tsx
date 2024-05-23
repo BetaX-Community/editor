@@ -31,10 +31,8 @@ const App = () => {
                      position={{"lat": busStop.lat,
                                 "lng": busStop.lng}}
                      title={busStop.name} />) }
-      { stops.map((stop, index) =>
-                  <Marker key={index}
-                  position={stop.location}
-                  title={stop.name} />) }
+      { stops.map((stop, index) => <Marker key={index} position={stop.location}
+                  title={(stop.name === "" ? stop.location.lat + ',' + stop.location.lng : stop.name)} />) }
     { ways.map((path, index) => <Polyline key={index} path={path} />) }
     </Map>
       <div>
