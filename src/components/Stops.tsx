@@ -20,9 +20,14 @@ const Stops = () => {
     const lng = event.target.dataset.lng;
 
     // Update the state with the selected stop data
-    setBusStops([...busStops, {"name": stopName,
-                               "lat": parseFloat(lat),
-                               "lng": parseFloat(lng)}]);
+    if (busStops.find((item) => item.name === stopName && item.lat == lat && item.lng == lng)) {
+      setBusStops(busStops.filter((item) => item.name !== stopName || item.lat != lat || item.lng != lng));
+    }
+    else {
+      setBusStops([...busStops, {"name": stopName,
+                                 "lat": parseFloat(lat),
+                                 "lng": parseFloat(lng)}]);
+    }
   };
 
   useEffect(() => {
