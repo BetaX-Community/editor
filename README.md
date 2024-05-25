@@ -7,8 +7,9 @@ A browser-based tool for enhancing map data for commuting.
 You need to run the `map-data-server` which is serving the data that
 is consumed by this web app.
 
-You also need to set the environment varialbe `VITE_GOOGLE_MAPS_API_KEY`
-in a `.env` file in the base directory.
+You also need to set the environment variable `VITE_GOOGLE_MAPS_API_KEY` and `VITE_MAP_DATA_SERVER_URL`
+in a `.env` file in the base directory with your Google Maps API key and the URL of the map-data-server respectively.
+You can copy the `.env.example` file to `.env` and edit the placeholders and default values there.
 
 The process of creating a new API key is documented here [Generate API
 keys](https://developers.google.com/maps/documentation/javascript/get-api-key#create-api-keys)
