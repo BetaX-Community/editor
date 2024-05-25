@@ -15,8 +15,8 @@ const center = {
 
 const App = () => {
 
-  const {stops, ways} = useMap();
-  
+  const {busStops, stops, ways} = useMap();
+
   return (
       <>
       <APIProvider apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string}>
@@ -25,7 +25,15 @@ const App = () => {
     defaultCenter={center}
     defaultZoom={10}
       >
-      { stops.map((stop, index) => <Marker key={index} position={stop.location} title={stop.name} />) }
+      { busStops.map((busStop, index) =>
+                     <Marker key={index}
+                     position={{"lat": busStop.lat,
+                                "lng": busStop.lng}}
+                     title={busStop.name} />) }
+      { stops.map((stop, index) =>
+                  <Marker key={index}
+                  position={stop.location}
+                  title={stop.name} />) }
     { ways.map((path, index) => <Polyline key={index} path={path} />) }
     </Map>
       </APIProvider>
