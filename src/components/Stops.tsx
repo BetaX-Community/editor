@@ -5,7 +5,7 @@ const Stops = () => {
   const [values, setValues] = useState<BusStopData[]>([]);
 
   const fetchBusStops = async () => {
-    const res = await fetch("http://localhost:2999/busStops");
+    const res = await fetch(`${import.meta.env.VITE_MAP_DATA_SERVER_URL}busStops`);
     const parsed = await res.json();
     setValues(parsed);
   };

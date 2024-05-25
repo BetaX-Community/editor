@@ -7,15 +7,15 @@ const Lines = () => {
   const { setSelectedLine, setStops, setWays } = useMap();
 
   const fetchBusLines = async () => {
-    const res = await fetch("http://localhost:2999/lines");
+    const res = await fetch(`${import.meta.env.VITE_MAP_DATA_SERVER_URL}lines`);
     const parsed: string[] = await res.json();
     setValues(parsed);
   };
 
   const onLineSelect = async (name: string) => {
     const [stopsRes, waysRes] = await Promise.all([
-      fetch(`http://localhost:2999/stops/${name}`),
-      fetch(`http://localhost:2999/ways/${name}`),
+      fetch(`${import.meta.env.VITE_MAP_DATA_SERVER_URL}stops/${name}`),
+      fetch(`${import.meta.env.VITE_MAP_DATA_SERVER_URL}ways/${name}`),
     ]);
     const [stops, ways] = await Promise.all([stopsRes.json(), waysRes.json()]);
 
