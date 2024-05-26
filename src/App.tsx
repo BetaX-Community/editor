@@ -15,7 +15,10 @@ const center = {
 
 const App = () => {
 
-  const {busStops, stops, selectedLine, ways} = useMap();
+  const {busStops, stops, selectedLine, ways}: {busStops: BusStopData[],
+                                                stops: MapBusStopData[],
+                                                selectedLine?: string,
+                                                ways: google.maps.LatLng[][]} = useMap();
 
   return (
       <>
@@ -26,10 +29,10 @@ const App = () => {
     defaultCenter={center}
     defaultZoom={10}
       >
-      { busStops.map((busStop, index) =>
+      { busStops.map((busStop: BusStopData, index: number) =>
                      <Marker key={index}
-                     position={{"lat": busStop.lat,
-                                "lng": busStop.lng}}
+                     position={{"lat": parseFloat(busStop.lat),
+                                "lng": parseFloat(busStop.lng)}}
                      title={busStop.name} />) }
       { stops.map((stop, index) => <Marker key={index} position={stop.location}
                   title={(stop.name === "" ? stop.location.lat + ',' + stop.location.lng : stop.name)} />) }

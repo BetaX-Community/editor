@@ -18,11 +18,12 @@ const Stops = () => {
     setValues(parsed);
   };
 
-  const handleClick = (event) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     // Retrieve custom data attributes for bus stop name, latitude and longitude
-    const stopName = event.target.dataset.stopName;
-    const lat = event.target.dataset.lat;
-    const lng = event.target.dataset.lng;
+    const target = event.target as HTMLElement;
+    const stopName = target.dataset.stopName as string;
+    const lat = target.dataset.lat as string;
+    const lng = target.dataset.lng as string;
     const isDisplayed = busStops.find((item) => item.name === stopName && item.lat == lat && item.lng == lng);
 
     // If displayed, remove from the displayed bus stops
@@ -31,8 +32,8 @@ const Stops = () => {
     }
     else { // else display
       setBusStops([...busStops, {"name": stopName,
-                                 "lat": parseFloat(lat),
-                                 "lng": parseFloat(lng)}]);
+                                 "lat": lat,
+                                 "lng": lng}]);
     }
   };
 

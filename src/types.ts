@@ -9,3 +9,13 @@ type BusStopData = {
   lng: string;
   name: string;
 };
+
+type Coordinates = {
+  lat: number;
+  lng: number;
+};
+
+type MapBusStopData = {
+  location: Coordinates;
+  name: string;
+}

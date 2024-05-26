@@ -1,10 +1,12 @@
 import { createContext, useContext, useState } from "react";
 
 type MapContextData = {
-  ways: Way[];
-  setWays: (stop: Way[]) => void;
-  stops: BusStopData[];
-  setStops: (stop: BusStopData[]) => void;
+  busStops: BusStopData[];
+  setBusStops: (busStops: BusStopData[]) => void;
+  ways: google.maps.LatLng[][];
+  setWays: (stop: google.maps.LatLng[][]) => void;
+  stops: MapBusStopData[];
+  setStops: (stop: MapBusStopData[]) => void;
   selectedLine?: string;
   setSelectedLine: (line: string) => void;
 };
@@ -15,8 +17,8 @@ const useMap = () => useContext(MapContext);
 
 const MapContextProvider = (props: { children: React.ReactNode }) => {
   const [busStops, setBusStops] = useState<BusStopData[]>([]);
-  const [stops, setStops] = useState<BusStopData[]>([]);
-  const [ways, setWays] = useState<Way[]>([]);
+  const [stops, setStops] = useState<MapBusStopData[]>([]);
+  const [ways, setWays] = useState<google.maps.LatLng[][]>([]);
   const [selectedLine, setSelectedLine] = useState<string>();
 
   const contextValue = {
