@@ -1,6 +1,9 @@
-import React from 'react';
+interface IBusLinesStops {
+  busLine?: string;
+  stops: MapBusStopData[];
+}
 
-const BusLineStops = ({ busLine, stops }) => {
+const BusLineStops = ({ busLine, stops }: IBusLinesStops) => {
   return (
     <div>
       <h2>Stops for Bus Line {busLine}</h2>
