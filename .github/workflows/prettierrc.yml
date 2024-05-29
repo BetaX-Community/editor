@@ -1,21 +1,24 @@
-name: Format
+name: Format the code
+
 on:
+  push:
   pull_request:
-    branches: [main]
+
 jobs:
   format:
     runs-on: ubuntu-latest
+    name: Format Files
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          ref: ${{ github.head_ref }}
-      - uses: actions/setup-node@v2
+          node-version: "16"
+      - name: Prettier
+        run: npx prettier --write **/*.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
         with:
-          node-version: "14.x"
-      - run: npm ci
-      - run: npm run format
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Apply formatting changes
-          branch: ${{ github.head_ref }}
+          commit_message: "style: format files"
