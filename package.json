@@ -38,5 +38,5 @@
   "peerDependencies": {
     "react": "^15.5.0"
   },
-  "packageManager": "yarn@4.2.2"
+  "packageManager": "yarn@1.22.19"
 }
