@@ -23,28 +23,6 @@ jobs:
       
       - run: echo "🍏 This job's status is ${{ job.status }}."
       
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '12'  # specify your Node.js version
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install dependencies
-        run: npm install
       
-      - name: Build application
-        run: npm run build  # or the relevant build command for your project
-      
-      - name: Start application
-        run: npm start &
-        env:
-          CI: true
 
 
