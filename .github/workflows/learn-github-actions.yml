@@ -48,13 +48,13 @@ jobs:
           CI: true
 
       - name: Wait for application to be ready
-        run: npx wait-on http://localhost:4173  # Ensure this matches your local server URL (default Vite preview port)
+        run: npx wait-on http://localhost:5173  # Ensure this matches your local server URL (default Vite preview port)
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
           start: yarn preview
-          wait-on: http://localhost:4173
+          wait-on: http://localhost:5173
           browser: chrome
           
       - name: Debug - List Running Processes
