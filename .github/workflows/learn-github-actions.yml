@@ -31,34 +31,29 @@ jobs:
       - name: Cache Node.js modules
         uses: actions/cache@v2
         with:
-          path: ~/.yarn-cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm install
       
       - name: Build application
-        run: yarn build  # Uses the build command from package.json: tsc && vite build
-
+        run: npm run build  # or the relevant build command for your project
+      
       - name: Start application
-        run: yarn preview &
+        run: npm start &
         env:
           CI: true
 
       - name: Wait for application to be ready
-        run: npx wait-on http://localhost:5173  # Ensure this matches your local server URL (default Vite preview port)
+        run: npx wait-on http://localhost:3000  # ensure this matches your local server URL
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v6
         with:
-          start: yarn preview
-          wait-on: http://localhost:5173
+          start: npm start
+          wait-on: http://localhost:3000
           browser: chrome
-          
-      - name: Debug - List Running Processes
-        run: ps -aux
 
-      - name: Debug - Print Application Logs
-        run: cat pid.txt | xargs tail -n 100
