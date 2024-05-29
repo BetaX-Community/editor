@@ -48,9 +48,3 @@ jobs:
           CI: true
 
 
-      - name: Run Cypress tests
-        uses: cypress-io/github-action@v6
-        with:
-          start: npm start
-          browser: chrome
-

@@ -1,0 +1,2 @@
+- name: Cypress Github Action
+  uses: cypress-io/github-action@v2
