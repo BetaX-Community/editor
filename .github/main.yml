@@ -1,7 +1,5 @@
-name: Cypress Tests
-
+name: End-to-end tests
 on: push
-
 jobs:
   cypress-run:
     runs-on: ubuntu-22.04
@@ -12,6 +10,3 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
-        with:
-          build: npm run build
-          start: npm start
