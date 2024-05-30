@@ -1,0 +1,12 @@
+version: "3.4"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: editor:latest
+    env_file:
+      - .env
+    container_name: editor
+    ports:
+      - 8080:80
