@@ -18,4 +18,4 @@ type Coordinates = {
 type MapBusStopData = {
   location: Coordinates;
   name: string;
-}
+};

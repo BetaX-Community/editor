@@ -1,4 +1,4 @@
-name: Format the code
+name: Check code format
 
 on:
   push:
@@ -6,21 +6,14 @@ on:
 
 jobs:
   format:
-    runs-on: ubuntu-latest
-    name: Format Files
+    runs-on: ubuntu-22.04
+    name: Run Prettier
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
       - name: Prettier
-        run: npx prettier --write **/*.js
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |-
+          npx prettier --check ./src/
 
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
-        with:
-          commit_message: "style: format files"
-
-          
