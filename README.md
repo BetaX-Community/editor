@@ -28,10 +28,13 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 ## Run in Docker
-Install Docker and docker compose and execute 
+Install Docker and docker compose and execute, the app run in http://localhost:8080/
+
 ```bash
 docker compose up -d
 ```
+
+
 
 ## Expanding the ESLint configuration
 
