@@ -9,5 +9,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <MapContextProvider>
       <App />
     </MapContextProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

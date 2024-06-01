@@ -9,7 +9,11 @@ const BusLineStops = ({ busLine, stops }: IBusLinesStops) => {
       <h2>Stops for Bus Line {busLine}</h2>
       <ul>
         {stops.map((stop, index) => (
-          <li key={index}>{(stop.name === "" ? stop.location.lat + ',' + stop.location.lng : stop.name)}</li>
+          <li key={index}>
+            {stop.name === ""
+              ? stop.location.lat + "," + stop.location.lng
+              : stop.name}
+          </li>
         ))}
       </ul>
     </div>
