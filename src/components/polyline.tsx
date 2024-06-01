@@ -5,12 +5,12 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useRef
-} from 'react';
+  useRef,
+} from "react";
 
-import {GoogleMapsContext, useMapsLibrary} from '@vis.gl/react-google-maps';
+import { GoogleMapsContext, useMapsLibrary } from "@vis.gl/react-google-maps";
 
-import type {Ref} from 'react';
+import type { Ref } from "react";
 
 type PolylineEventProps = {
   onClick?: (e: google.maps.MapMouseEvent) => void;
@@ -53,10 +53,10 @@ function usePolyline(props: PolylineProps) {
     onDragStart,
     onDragEnd,
     onMouseOver,
-    onMouseOut
+    onMouseOut,
   });
 
-  const geometryLibrary = useMapsLibrary('geometry');
+  const geometryLibrary = useMapsLibrary("geometry");
 
   const polyline = useRef(new google.maps.Polyline()).current;
   // update PolylineOptions (note the dependencies aren't properly checked
@@ -79,7 +79,7 @@ function usePolyline(props: PolylineProps) {
   useEffect(() => {
     if (!map) {
       if (map === undefined)
-        console.error('<Polyline> has to be inside a Map component.');
+        console.error("<Polyline> has to be inside a Map component.");
 
       return;
     }
@@ -98,12 +98,12 @@ function usePolyline(props: PolylineProps) {
     // Add event listeners
     const gme = google.maps.event;
     [
-      ['click', 'onClick'],
-      ['drag', 'onDrag'],
-      ['dragstart', 'onDragStart'],
-      ['dragend', 'onDragEnd'],
-      ['mouseover', 'onMouseOver'],
-      ['mouseout', 'onMouseOut']
+      ["click", "onClick"],
+      ["drag", "onDrag"],
+      ["dragstart", "onDragStart"],
+      ["dragend", "onDragEnd"],
+      ["mouseover", "onMouseOver"],
+      ["mouseout", "onMouseOut"],
     ].forEach(([eventName, eventCallback]) => {
       gme.addListener(polyline, eventName, (e: google.maps.MapMouseEvent) => {
         const callback = callbacks.current[eventCallback];
