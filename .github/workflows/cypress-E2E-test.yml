@@ -1,0 +1,48 @@
+name: Cypress E2E Tests
+
+on: [push, pull_request]
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Set env
+        run: echo "VITE_MAP_DATA_SERVER_URL=http://localhost:2999/api/" >> $GITHUB_ENV
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: /home/runner/work/editor/editor
+          install-command: npm ci
+          # just perform install
+          runTests: false
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          working-directory: /home/runner/work/editor/editor
+          install: false
+          start: npm run dev
+          wait-on: 'http://localhost:5173'
+      # after the test run completes store videos and any screenshots
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v4
+        # add the line below to store screenshots only on failures
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore # 'warn' or 'error' are also available, defaults to `warn`
+      - name: Uplaod videos
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos
+          if-no-files-found: ignore # 'warn' or 'error' are also available, defaults to `warn`
